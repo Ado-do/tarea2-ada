@@ -1,1 +1,6 @@
+# Compiled files
 build/
+
+# LSP files
+.cache/
+compile_commands.json

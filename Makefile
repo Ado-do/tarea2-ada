@@ -2,7 +2,7 @@
 CXX = g++
 
 # Compiler flags
-CXX_FLAGS = -Wall -Wextra -std=c++17 -ggdb
+CXX_FLAGS = -Wall -Wextra -std=c++20
 
 # Source files
 SRCS = $(wildcard src/*)
