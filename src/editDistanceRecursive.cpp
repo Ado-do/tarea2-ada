@@ -1,5 +1,5 @@
+#include <iomanip>
 #include <iostream>
-#include <format>
 #include <string>
 
 using namespace std;
@@ -43,9 +43,9 @@ int main()
     int total = deletes + inserts;
 
     cout << "EditDistance entre\n"
-         << format("s1 ({:2}) =\n\t\"{}\"\n", s1.length(), s1)
-         << format("s2 ({:2}) =\n\t\"{}\"\n", s2.length(), s2)
-         << format("es\n\t{} (deletes = {}, inserts = {})\n", total, deletes, inserts);
+        << "s1 (" << setw(2) << s1.length() << ") =\n\t\"" << s1 << "\"\n"
+        << "s2 (" << setw(2) << s2.length() << ") =\n\t\"" << s2 << "\"\n"
+        << "es\n\t" << total << " (deletes = " << deletes << ", inserts = " << inserts << ")\n";
 
     return 0;
 }
