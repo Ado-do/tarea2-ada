@@ -10,7 +10,7 @@ int editDistanceRecursive(string &s1, string &s2, int i, int j)
         if (j == 0) return i; // s2 recorrida completamente, se borran los i caracteres restantes de s1
     }
 
-    if (s1[i] == s2[j])
+    if (s1[i-1] == s2[j-1])
         // s1 y s2 coinciden, no se necesita una operacion
         return editDistanceRecursive(s1, s2, i-1, j-1);
     else
@@ -24,12 +24,9 @@ int main()
     getline(cin, s1);
     getline(cin, s2);
 
-    cout << "s1 =\n"
-         << "\t\"" << s1 << "\"\n"
-         << "s2 =\n"
-         << "\t\"" << s2 << "\"\n"
-         << "editDistanceRecursive(s1, s2) = \n"
-         << '\t' << editDistanceRecursive(s1, s2, s1.length() - 1, s2.length() - 1) << '\n';
+    cout << "s1 = \"" << s1 << "\"\n"
+         << "s2 = \"" << s2 << "\"\n"
+         << "editDistanceRecursive(s1, s2) =" << editDistanceRecursive(s1, s2, s1.length(), s2.length()) << '\n';
 
     return 0;
 }
