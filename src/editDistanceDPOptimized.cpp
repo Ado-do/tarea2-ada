@@ -49,7 +49,7 @@ int main() {
     getline(cin, s1);
     getline(cin, s2);
 
-	auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
     
     int dist = editDistanceDPOptimized(s1, s2);
 
