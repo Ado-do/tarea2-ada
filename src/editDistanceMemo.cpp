@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <chrono>
 
 using namespace std;
 
@@ -31,10 +32,14 @@ int main()
     int s2_len = s2.length();
 
     vector<vector<int>> memo(s1_len, vector<int>(s2_len, -1));
+    auto start = std::chrono::high_resolution_clock::now();
 
     cout << "s1 = \"" << s1 << "\"\n"
          << "s2 = \"" << s2 << "\"\n"
          << "editDistanceMemo(s1, s2) = " << editDistanceMemo(s1, s2, s1_len, s2_len, memo) << '\n';
-
+    
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    cout <<"Tiempo utilizado:" << duration.count() <<endl;
     return 0;
 }

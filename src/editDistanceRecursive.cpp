@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <chrono>
 
 using namespace std;
 
@@ -23,10 +24,17 @@ int main()
     string s1, s2;
     getline(cin, s1);
     getline(cin, s2);
-
+ 
+    auto start = std::chrono::high_resolution_clock::now();
+    
     cout << "s1 = \"" << s1 << "\"\n"
          << "s2 = \"" << s2 << "\"\n"
          << "editDistanceRecursive(s1, s2) =" << editDistanceRecursive(s1, s2, s1.length(), s2.length()) << '\n';
-
+    
+    auto end = std::chrono::high_resolution_clock::now();
+    
+    
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    cout <<"\nTiempo utilizado:" << duration.count() <<endl;
     return 0;
 }
