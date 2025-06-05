@@ -57,8 +57,7 @@ int main() {
     
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
     
-    cout << "Distancia de edicion optimizada:" << dist << "\nTiempo utilizado:" << duration.count() <<
-    "\nEspacio utilizado:" << endl;
+    cout << "Distancia de edicion optimizada:" << dist << "\nTiempo utilizado:" << duration.count() << endl;
 
     return 0;
 }
