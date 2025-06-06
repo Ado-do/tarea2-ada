@@ -4,3 +4,6 @@ build/
 # LSP files
 .cache/
 compile_commands.json
+
+# Tex
+tex/
