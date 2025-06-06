@@ -1,0 +1,12 @@
+BasedOnStyle: google
+IndentWidth: 4
+UseTab: Never
+ColumnLimit: 140
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+
+AllowShortIfStatementsOnASingleLine: true
+SpaceBeforeParens: ControlStatements
+SortIncludes: true
