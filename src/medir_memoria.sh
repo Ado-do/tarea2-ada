@@ -15,10 +15,10 @@ echo "Compilación completada."
 # --- Text Generation ---
 echo "--- Generando textos de prueba ---"
 texts=()
-texts+=("experimentacion")
-texts+=("distancia de edicion")
-texts+=("Este es un ejemplo de una frase para el analisis experimental de algoritmos.")
-texts+=("La distancia de edicion, tambien conocida como distancia de Levenshtein, es una metrica para medir la diferencia entre dos secuencias de caracteres. Se define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otra.")
+texts+=("experimento")
+texts+=("problema edit distance")
+texts+=("Este es un ejemplo de una frase para el analisis experimental de algoritmos.Se define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otra")
+texts+=("La distancia de edicion, tambien conocida como distancia de Levenshtein, es una metrica para medir la diferencia entre dos secuencias de caracteres. Se define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otra.Se define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otraSe define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otraSe define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otraSe define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otraLa distancia de edicion, tambien conocida como distancia de Levenshtein, es una metrica para medir la diferencia entre dos secuencias de caracteres. Se define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otra.Se define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otraSe define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otraSe define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otraSe define como el numero minimo de operaciones de insercion, eliminacion o sustitucion de un solo caracter necesarias para cambiar una secuencia por la otra")
 
 echo "Textos de prueba generados:"
 for text in "${texts[@]}"; do

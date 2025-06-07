@@ -25,7 +25,19 @@ def graficar_memoria():
     )
 
     # Ordenar los datos por el producto de las longitudes para una mejor visualización
-    df = df.sort_values(by='Longitud_Producto')
+    # Y también por la longitud de los textos para que L3 vs L36 sea diferente de L36 vs L3
+    df['Longitud_Producto_Orden'] = df['Longitud1'] * df['Longitud2']
+    df = df.sort_values(by=['Longitud_Producto_Orden', 'Longitud1', 'Longitud2'])
+
+    # Definir el orden deseado para los algoritmos
+    # Queremos que 'editDistanceRecursive' sea el último
+    # Asegúrate de que todos los nombres de tus algoritmos estén aquí
+    algorithm_order = [
+        'editDistanceMemo',
+        'editDistanceDP',
+        'editDistanceDPOptimized',
+        'editDistanceRecursive'
+    ]
 
     plt.style.use('seaborn-v0_8-whitegrid')
     plt.figure(figsize=(16, 9))
@@ -36,7 +48,8 @@ def graficar_memoria():
         x='Etiqueta_Prueba',
         y='Memoria(KB)',
         hue='Algoritmo',
-        palette='plasma'
+        palette='plasma',
+        hue_order=algorithm_order # <--- AQUI SE ESPECIFICA EL ORDEN
     )
 
     # Añadir títulos y etiquetas para mayor claridad
