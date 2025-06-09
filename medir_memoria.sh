@@ -1,18 +1,14 @@
 #!/bin/bash
 
-# Define the C++ source files for Edit Distance implementations
-archivos=("editDistanceMemo.cpp" "editDistanceDP.cpp" "editDistanceDPOptimized.cpp" "editDistanceRecursive.cpp")
-
-# --- Compilation ---
-echo "--- Compilando los programas ---"
-for archivo in "${archivos[@]}"; do
-    exe="${archivo%.cpp}"
-    echo "Compilando $archivo..."
-    g++ -O2 -o "$exe" "$archivo" || { echo "Fallo al compilar $archivo"; exit 1; }
-done
+# Compilar todo
+echo "--- Compilando todo: ---"
+make all || {
+    echo "Error: Compilation failed."
+    exit 1
+}
 echo "Compilación completada."
 
-# --- Text Generation ---
+# Generacion de texto
 echo "--- Generando textos de prueba ---"
 texts=()
 texts+=("experimento")
@@ -25,12 +21,12 @@ for text in "${texts[@]}"; do
     echo "- \"$text\" (Longitud: ${#text})"
 done
 
-# --- CSV Output Setup ---
-output="resultados_memoria.csv"
+# Archivo CSV de salida
+output="build/resultados_memoria.csv"
 echo "Algoritmo,Texto1,Longitud1,Texto2,Longitud2,Longitud_Producto,Memoria(KB)" > "$output"
 echo "Preparando archivo de resultados: $output"
 
-# --- Measurement Function for Memory ---
+# Medir memoria
 medir_memoria() {
     local prog_path=$1
     local t1=$2
@@ -39,38 +35,37 @@ medir_memoria() {
     local len2=${#t2}
     local len_prod=$((len1 * len2))
 
-    echo "Ejecutando ${prog_path##*/} con longitudes ${len1} y ${len2} (midiendo memoria)..."
+    echo "Ejecutando $(basename "$prog_path") con longitudes ${len1} y ${len2} (midiendo memoria)..."
 
     if [[ -x "$prog_path" ]]; then
-        read memoria_kb <<< $( { /usr/bin/time -f "%M" "$prog_path" <<< "$t1"$'\n'"$t2" 1>/dev/null; } 2>&1 )
-        # CORRECCIÓN AQUÍ: Se añadieron comillas dobles escapadas \" alrededor de $t1 y $t2
-        echo "${prog_path##*/},\"$t1\",$len1,\"$t2\",$len2,$len_prod,$memoria_kb" >> "$output"
+        memoria_kb=$({ /usr/bin/time -f "%M" "$prog_path" <<< "$t1"$'\n'"$t2" 1>/dev/null; } 2>&1)
+        echo "$(basename "$prog_path"),\"$t1\",$len1,\"$t2\",$len2,$len_prod,$memoria_kb" >> "$output"
     else
         echo "Error: No se puede ejecutar $prog_path."
     fi
 }
 
-# --- Loop through algorithms and apply measurement logic ---
+# Recorrer algoritmos y aplicar logica de medicion
+archivos=("build/editDistanceMemo" "build/editDistanceDP" "build/editDistanceDPOptimized" "build/editDistanceRecursive")
+
 echo "--- Iniciando mediciones de memoria ---"
 num_texts=${#texts[@]}
 
 for archivo in "${archivos[@]}"; do
-    exe_path="./${archivo%.cpp}"
-    
-    if [[ "$archivo" == "editDistanceRecursive.cpp" ]]; then
+    if [[ "$(basename "$archivo")" == "editDistanceRecursive" ]]; then
         echo "--- Mediciones especiales para $archivo ---"
         t1=${texts[0]}
         t2=${texts[1]}
-        medir_memoria "$exe_path" "$t1" "$t2"
-        medir_memoria "$exe_path" "$t2" "$t1"
+        medir_memoria "$archivo" "$t1" "$t2"
+        medir_memoria "$archivo" "$t2" "$t1"
     else
         echo "--- Iniciando mediciones para $archivo ---"
         for i in $(seq 0 $((num_texts - 1))); do
             for j in $(seq 0 $((num_texts - 1))); do
-                if [ $i -ne $j ]; then
+                if [ "$i" -ne "$j" ]; then
                     t1=${texts[$i]}
                     t2=${texts[$j]}
-                    medir_memoria "$exe_path" "$t1" "$t2"
+                    medir_memoria "$archivo" "$t1" "$t2"
                 fi
             done
         done

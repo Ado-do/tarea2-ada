@@ -1,15 +1,10 @@
 #!/bin/bash
 
-# Define the C++ source files for Edit Distance implementations
-archivos=("editDistanceMemo.cpp" "editDistanceDP.cpp" "editDistanceDPOptimized.cpp" "editDistanceRecursive.cpp")
-
-# --- Compilation ---
-echo "--- Compilando los programas ---"
-for archivo in "${archivos[@]}"; do
-    exe="${archivo%.cpp}" # Get executable name without .cpp extension
-    echo "Compilando $archivo..."
-    g++ -O2 -o "$exe" "$archivo" || { echo "Fallo al compilar $archivo"; exit 1; }
-done
+# Compilar todo
+make all || {
+    echo "Error: Compilation failed."
+    exit 1
+}
 echo "Compilación completada."
 
 # --- Text Generation ---
@@ -26,7 +21,7 @@ for text in "${texts[@]}"; do
 done
 
 # --- CSV Output Setup ---
-output="resultados_tiempo.csv"
+output="build/resultados_tiempo.csv"
 echo "Algoritmo,Texto1,Longitud1,Texto2,Longitud2,Longitud_Producto,Tiempo(s)" > "$output"
 echo "Preparando archivo de resultados: $output"
 
@@ -38,51 +33,65 @@ medir_tiempo() {
     local len1=${#t1}
     local len2=${#t2}
     local len_prod=$((len1 * len2))
+    local timeout_seconds=10  # Timeout for recursive algorithm
 
-    echo "Ejecutando ${prog_path##*/} con longitudes ${len1} y ${len2} (midiendo tiempo con alta precisión)..."
+    echo "Ejecutando $(basename "$prog_path") con longitudes ${len1} y ${len2}..."
 
     if [[ -x "$prog_path" ]]; then
-        # **NUEVO MÉTODO DE MEDICIÓN**
-        # 1. Capturar el tiempo de inicio con nanosegundos.
-        start=$(date +%s.%N)
+        # Escape text for CSV
+        local escaped_t1=${t1//\"/\"\"}
+        local escaped_t2=${t2//\"/\"\"}
 
-        # 2. Ejecutar el programa. Su salida se envía a /dev/null para no interferir.
-        "$prog_path" <<< "$t1"$'\n'"$t2" > /dev/null
+        # Measure time with timeout protection
+        if [[ "$(basename "$prog_path")" == *"Recursive"* ]]; then
+            start=$(date +%s.%N)
+            timeout $timeout_seconds "$prog_path" <<< "$t1"$'\n'"$t2" >/dev/null 2>&1
+            status=$?
+            end=$(date +%s.%N)
+        else
+            start=$(date +%s.%N)
+            "$prog_path" <<< "$t1"$'\n'"$t2" >/dev/null
+            status=$?
+            end=$(date +%s.%N)
+        fi
 
-        # 3. Capturar el tiempo de finalización.
-        end=$(date +%s.%N)
+        if [[ $status -eq 124 ]]; then
+            echo "  [TIMEOUT] El algoritmo excedió el tiempo límite de $timeout_seconds segundos"
+            tiempo_s="TIMEOUT"
+        elif [[ $status -ne 0 ]]; then
+            echo "  [ERROR] El algoritmo falló con código $status"
+            tiempo_s="ERROR"
+        else
+            tiempo_s=$(echo "$end - $start" | bc -l 2>/dev/null || echo "N/A")
+        fi
 
-        # 4. Usar 'bc' (basic calculator) para calcular la diferencia con alta precisión.
-        tiempo_s=$(echo "$end - $start" | bc)
-
-        # Escribir el resultado en el CSV, asegurando que los textos estén entrecomillados.
-        echo "${prog_path##*/},\"$t1\",$len1,\"$t2\",$len2,$len_prod,$tiempo_s" >> "$output"
+        echo "\"$(basename "$prog_path")\",\"$escaped_t1\",$len1,\"$escaped_t2\",$len2,$len_prod,$tiempo_s" >> "$output"
     else
         echo "Error: No se puede ejecutar $prog_path."
     fi
 }
 
-# --- Loop through algorithms and apply measurement logic ---
+# --- Loop through algorithms ---
+archivos=("build/editDistanceMemo" "build/editDistanceDP" "build/editDistanceDPOptimized" "build/editDistanceRecursive")
+
 echo "--- Iniciando mediciones de tiempo ---"
 num_texts=${#texts[@]}
 
 for archivo in "${archivos[@]}"; do
-    exe_path="./${archivo%.cpp}"
-    
-    if [[ "$archivo" == "editDistanceRecursive.cpp" ]]; then
-        echo "--- Mediciones especiales para $archivo (es muy lento) ---"
+    if [[ "$(basename "$archivo")" == "editDistanceRecursive" ]]; then
+        echo "--- Mediciones especiales para algoritmo recursivo ---"
         t1=${texts[0]}
         t2=${texts[1]}
-        medir_tiempo "$exe_path" "$t1" "$t2"
-        medir_tiempo "$exe_path" "$t2" "$t1"
+        medir_tiempo "$archivo" "$t1" "$t2"
+        medir_tiempo "$archivo" "$t2" "$t1"
     else
-        echo "--- Iniciando mediciones para $archivo ---"
+        echo "--- Iniciando mediciones para $(basename "$archivo") ---"
         for i in $(seq 0 $((num_texts - 1))); do
             for j in $(seq 0 $((num_texts - 1))); do
-                if [ $i -ne $j ]; then
+                if [ "$i" -ne "$j" ]; then
                     t1=${texts[$i]}
                     t2=${texts[$j]}
-                    medir_tiempo "$exe_path" "$t1" "$t2"
+                    medir_tiempo "$archivo" "$t1" "$t2"
                 fi
             done
         done
