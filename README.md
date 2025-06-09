@@ -13,4 +13,8 @@ del curso Análisis de Algoritmos (2025-1).
 
 ## Informe
 
-Desarrollo utilizando overleaf: [link](https://www.overleaf.com/read/wmmcspxqnzsr#c7e606)
+Desarrollo utilizando overleaf: [enlace](https://www.overleaf.com/read/wmmcspxqnzsr#c7e606)
+
+## Uso
+
+
