@@ -5,7 +5,7 @@ CXX = g++
 CXX_FLAGS = -Wall -Wextra -std=c++17 -ggdb
 
 # Source files
-SRCS = $(wildcard src/*)
+SRCS = $(wildcard src/*.cpp)
 
 # Compiled files
 BINS = $(SRCS:src/%.cpp=build/%)
@@ -22,8 +22,7 @@ clean:
 	rm -rf build/
 
 check:
-	@echo $(SRCS)
-	@echo $(OBJS)
-	@echo $(BINS)
+	@echo "SRCS = $(SRCS)"
+	@echo "BINS = $(BINS)"
 
 .PHONY: all clean
