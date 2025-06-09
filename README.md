@@ -1,5 +1,8 @@
 # Tarea 2: Delete Insert Edit Distance
 
+![memoria](./doc/grafico_memoria.png)
+![tiempo](./doc/grafico_tiempo.png)
+
 ## Descripción
 
 Este repositorio contiene los archivos relacionados con la [tarea 2](doc/tarea2.pdf)
@@ -17,4 +20,10 @@ Desarrollo utilizando overleaf: [enlace](https://www.overleaf.com/read/wmmcspxqn
 
 ## Uso
 
+Compilar, medir y graficar todo:
 
+```bash
+./medir_graficar_todo.sh
+```
+
+Luego, todos los archivos generados estarán el directorio `build/`
